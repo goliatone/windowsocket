@@ -1,0 +1,30 @@
+{
+  "name": "windowsocket",
+  "version": "0.0.0",
+  "description": "Messaging class implementing WebSocket API.",
+  "homepage": "https://github.com/goliatone/windowsocket",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/goliatone/windowsocket.git"
+	},
+	 "bugs": {
+		"url": "https://github.com/goliatone/windowsocket/issues"
+	},
+	"author": {
+		"name": "goliatone",
+		"email": "hello@goliatone.com",
+		"url": "http://goliatone.com"
+	},
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "https://github.com/goliatone/windowsocket/blob/master/LICENSE-MIT"
+		}
+	],
+  "dependencies": {
+    "jquery": "~1.9.1",
+    "requirejs": "~2.1.4"
+  },
+  "devDependencies": {
+  }
+}
