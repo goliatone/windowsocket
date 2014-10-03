@@ -70,8 +70,6 @@
         return con;
     };
 
-
-
     ///////////////////////////////////////////////////
     // CONSTRUCTOR
     ///////////////////////////////////////////////////
@@ -93,12 +91,35 @@
         url: ''
     };
 
+    var ERROR_REQUIRED_ARGUMENT = 'Failed to construct \'WindowSocket\': 1 argument required, but only 0 present.';
+    var ERROR_URL_SCHEME = 'Failed to construct \'WindowSocket\': The URL\'s scheme must be \'tcp\'.';
+    var ERROR_CONNECT_URL = 'WindowSocket connection to \'{{url}}\' failed: Connection closed before receiving a handshake response.'
+
     /**
      * WindowSocket constructor
      *
+     * @param  {String} url       The URL to which to connect; this
+     *                            should be the URL to which the
+     *                            WindowSocket
+     *                            server will respond.
+     * @param  {String|Array} protocols Optional. Either a single protocol
+     *                                  string or an array of protocol strings.
+     *                                  These strings are used to indicate
+     *                                  sub-protocols, so that a single server
+     *                                  can implement multiple WebSocket
+     *                                  sub-protocols (for example, you might
+     *                                  want one server to be able to handle
+     *                                  different types of interactions depending
+     *                                  on the specified protocol). If you don't
+     *                                  specify a protocol string, an empty string
+     *                                  is assumed.
      * @param  {object} config Configuration object.
      */
-    var WindowSocket = function(config) {
+    var WindowSocket = function(url, protocols, config) {
+        if(!url) throw new TypeError(ERROR_REQUIRED_ARGUMENT);
+        if(url.indexOf('tcp://') !== 0) throw new SyntaxError(ERROR_REQUIRED_ARGUMENT);
+        if(!WindowServer.connect(url, this)) throw new Error(ERROR_CONNECT_URL);
+
         config = _extend({}, this.constructor.DEFAULTS, config);
 
         if (config.autoinitialize) this.init(config);
@@ -117,19 +138,19 @@
     /**
      * The connection is not yet open.
      */
-    WindowSocket.CONNECTING = 0
+    WindowSocket.CONNECTING = 0;
     /**
      * The connection is open and ready to communicate.
      */
-    WindowSocket.OPEN = 1
+    WindowSocket.OPEN = 1;
     /**
      * The connection is in the process of closing.
      */
-    WindowSocket.CLOSING = 2
+    WindowSocket.CLOSING = 2;
     /**
      * The connection is closed or couldn't be opened.
      */
-    WindowSocket.CLOSED = 3
+    WindowSocket.CLOSED = 3;
 
     ///////////////////////////////////////////////////
     // PRIVATE METHODS
@@ -158,7 +179,7 @@
      *                                  is assumed.
      * @throws SECURITY_ERR The port to which the connection is being attempted is being blocked.
      */
-    WindowSocket.prototype.init = function(url, protocols, config) {
+    WindowSocket.prototype.init = function(config) {
         if (this.initialized) return this.logger.warn('Already initialized');
         this.initialized = true;
 
@@ -221,6 +242,15 @@
     WindowSocket.prototype.emit = function() {
         this.logger.warn(WindowSocket, 'emit method is not implemented', arguments);
     };
+
+    function WindowServer(){};
+    WindowServer.connect = function(){
+
+        return false;
+    };
+
+    WindowServer.handle = function(){};
+    WindowServer.send = function(){};
 
     return WindowSocket;
 }));
