@@ -215,6 +215,8 @@
         if (this.readyState !== WindowSocket.OPEN) {
             throw new Error(ERROR_INVALID_STATE);
         }
+
+        WindowServer.send(this, data);
     };
 
     /**
@@ -300,6 +302,69 @@
         //apply delegated callbacks:
         var handler = this['on' + event.type];
         if(typeof handler === 'function') handler.call(this, event);
+    };
+
+    ///////////////////////////////////////////////////
+    // PRIVATE METHODS
+    ///////////////////////////////////////////////////
+
+    WindowSocket.prototype._triggerEvent = function(e){
+
+    };
+
+    /**
+     * Create an Event instance.
+     * Interface DocumentEvent DOM Level 2.
+     *
+     * @see http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-DocumentEvent
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent
+     * @param  {String} type
+     * @return {void}
+     */
+    WindowSocket.prototype._buildEvent = function(type){
+        if(document.createEvent && window.Event){
+            var event = document.createEvent('Event');
+            event.initEvent(type, false, false);
+            return event;
+        }
+        return {type:type, bubbles:false, cancelable:false};
+    };
+
+    /**
+     * Create an MessageEvent instance.
+     * Interface DocumentEvent DOM Level 2.
+     *
+     * @see http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-DocumentEvent
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent
+     * @param  {String} data
+     * @return {void}
+     */
+    WindowSocket.prototype._buildMessageEvent = function(data){
+        if(window.MessageEvent && typeof MessageEvent === 'function'){
+            return new MessageEvent('message', {
+                'view':window,
+                'bubbles':false,
+                'cancelable':false,
+                'data':data
+            });
+        }
+
+        if(document.createEvent && window.MessageEvent){
+            var event = document.createEvent('MessageEvent');
+            event.initWithMessage('message', false, false, data, null, null, window, null);
+            return event;
+        }
+
+        return {type:'message', data:data, bubbles:false, cancelable:false};
+    };
+
+    WindowSocket.prototype._buildCloseEvent = function(e){
+        var event = this._buildEvent('close');
+        event.code = e.code;
+        event.reason = e.reason;
+        event.wasClean = e.clean;
+
+        return event;
     };
 
     /**
