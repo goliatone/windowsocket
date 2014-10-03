@@ -19,5 +19,5 @@ define(['windowsocket', 'jquery'], function (WindowSocket, $) {
 	windowsocket.onerror = function(e){
 		console.error('WE HAVE ERROR', e);
 	};
-
+	window.windowsocket = windowsocket;
 });
