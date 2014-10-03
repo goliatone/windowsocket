@@ -10,6 +10,5 @@ requirejs.config({
 
 define(['windowsocket', 'jquery'], function (WindowSocket, $) {
     console.log('Loading');
-	var windowsocket = new WindowSocket();
-	windowsocket.init();
+	var windowsocket = new WindowSocket('tcp://localhost:9000/test');
 });
