@@ -316,6 +316,7 @@
     WindowSocket.prototype._triggerEvent = function(e){
         if(e.readyState) this.readyState = e.readyState;
 
+        //TODO: Clean this up. It's really gross!
         var event,
             events = ['open', 'error', 'close'];
         if(events.indexOf(e.type) !== -1){
@@ -390,8 +391,9 @@
         return event;
     };
 
-    WindowSocket.prototype._throwError = function(e){
-
+    WindowSocket.prototype._throwError = function(message){
+        var args = [].splice.call(arguments, 1);
+        //TODO: replace message tokens, throw error
     };
 
     /**
