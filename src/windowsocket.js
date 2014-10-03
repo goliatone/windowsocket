@@ -91,9 +91,10 @@
     };
 
     var ERROR_REQUIRED_ARGUMENT = 'Failed to construct \'WindowSocket\': 1 argument required, but only 0 present.';
-    var ERROR_URL_SCHEME = 'Failed to construct \'WindowSocket\': The URL\'s scheme must be \'tcp\'.';
+    var ERROR_URL_SCHEME = 'Failed to construct \'WindowSocket\': The URL\'s scheme must be \'{{scheme}}\'.';
     var ERROR_CONNECT_URL = 'WindowSocket connection to \'{{url}}\' failed: Connection closed before receiving a handshake response.'
     var ERROR_INVALID_STATE = 'WindowSocket connection has not been established';
+    var ERROR_UNKNOWN_EVENT_TYPE = 'WindowSocket unkown event type {{type}}';
     /**
      * WindowSocket constructor
      *
@@ -307,9 +308,26 @@
     ///////////////////////////////////////////////////
     // PRIVATE METHODS
     ///////////////////////////////////////////////////
-
+    /**
+     * Method to trigger external events.
+     * @param  {Object} e
+     * @return {void}
+     */
     WindowSocket.prototype._triggerEvent = function(e){
+        if(e.readyState) this.readyState = e.readyState;
 
+        var event,
+            events = ['open', 'error', 'close'];
+        if(events.indexOf(e.type) !== -1){
+            event = this._buildEvent(e.type, e);
+        } else if(e.type === 'message') {
+            event = this._buildMessageEvent(e.type, e.message);
+        } else {
+            //TODO: ErrorMessage factory, replace strings.
+            throw new Error(ERROR_UNKNOWN_EVENT_TYPE);
+        }
+
+        this.dispatchEvent(event);
     };
 
     /**
@@ -321,13 +339,14 @@
      * @param  {String} type
      * @return {void}
      */
-    WindowSocket.prototype._buildEvent = function(type){
+    WindowSocket.prototype._buildEvent = function(e){
+        //assert(e.type);
         if(document.createEvent && window.Event){
             var event = document.createEvent('Event');
-            event.initEvent(type, false, false);
+            event.initEvent(e.type, false, false);
             return event;
         }
-        return {type:type, bubbles:false, cancelable:false};
+        return {type:e.type, bubbles:false, cancelable:false};
     };
 
     /**
@@ -339,7 +358,10 @@
      * @param  {String} data
      * @return {void}
      */
-    WindowSocket.prototype._buildMessageEvent = function(data){
+    WindowSocket.prototype._buildMessageEvent = function(e){
+        //TODO: assert(e.message);
+        var data = e.message;
+
         if(window.MessageEvent && typeof MessageEvent === 'function'){
             return new MessageEvent('message', {
                 'view':window,
@@ -359,12 +381,17 @@
     };
 
     WindowSocket.prototype._buildCloseEvent = function(e){
+        //TODO: assert(e.code, e.reason, e.clean);
         var event = this._buildEvent('close');
         event.code = e.code;
         event.reason = e.reason;
         event.wasClean = e.clean;
 
         return event;
+    };
+
+    WindowSocket.prototype._throwError = function(e){
+
     };
 
     /**
