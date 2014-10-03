@@ -84,6 +84,10 @@
 
         SCHEME:'tcp://',
 
+        provider: function(){
+            return WindowServer.instance();
+        },
+
         onerror: function() {},
         onclose: function() {},
         onmessage: function() {},
@@ -122,6 +126,8 @@
         this._listeners = {};
 
         config = _extend({}, this.constructor.DEFAULTS, config);
+
+        this.SERVER = config.provider();
 
         if (config.autoinitialize) this.init(config);
     };
@@ -184,12 +190,14 @@
         if (this.initialized) return this.logger.warn('Already initialized');
         this.initialized = true;
 
+        this.ID = Date.now();
+
         console.log('WindowSocket: Init!');
         _extend(this, config);
 
         if(!this.url) throw new TypeError(ERROR_REQUIRED_ARGUMENT);
         if(this.url.indexOf(this.SCHEME) !== 0) throw new SyntaxError(ERROR_REQUIRED_ARGUMENT);
-        if(!WindowServer.connect(this)) throw new Error(ERROR_CONNECT_URL);
+        if(!this.SERVER.connect(this)) throw new Error(ERROR_CONNECT_URL);
 
         return 'This is just a stub!';
     };
@@ -217,7 +225,7 @@
             throw new Error(ERROR_INVALID_STATE);
         }
 
-        WindowServer.send(this, data);
+        this.SERVER.send(this, data);
     };
 
     /**
@@ -251,7 +259,7 @@
         }
 
         this.readyState = WindowSocket.CLOSING;
-        WindowServer.close(this);
+        this.SERVER.close(this);
     };
 
     ///////////////////////////////////////////////////
@@ -381,6 +389,11 @@
         return {type:'message', data:data, bubbles:false, cancelable:false};
     };
 
+    /**
+     * @see  https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
+     * @param  {Event} e
+     * @return {void}
+     */
     WindowSocket.prototype._buildCloseEvent = function(e){
         //TODO: assert(e.code, e.reason, e.clean);
         var event = this._buildEvent('close');
@@ -405,11 +418,26 @@
 
 
 
-    function WindowServer(){}
+    function WindowServer(){
+        this._instances = {};
+    }
 
-    WindowServer.connect = function(instance){
-        WindowServer.connection = window._tcpManager();
-        if(!WindowServer.connection) return false;
+    WindowServer.instance = function(){
+        if(this._instance) return this._instance;
+        this._instance = new WindowServer();
+        this._instance.connection = window._tcpManager();
+        return this._instance;
+    };
+
+    WindowServer.prototype.init = function(){
+        if(this.initialized) return;
+        this.initialized = true;
+    };
+
+    WindowServer.prototype.connect = function(instance){
+        if(!this.connection) return false;
+
+        this._instances[instance.ID] = instance;
         var url = instance.url;
 
         //execute next
@@ -421,9 +449,18 @@
         return true;
     };
 
-    WindowServer.handle = function(){};
-    WindowServer.send = function(){};
-    WindowServer.close = function(){};
+    WindowServer.prototype.handle = function(){
+
+    };
+
+    WindowServer.prototype.send = function(instance, data){
+        _tcpManager().send(instance.url, data);
+    };
+
+    WindowServer.prototype.close = function(instance){
+        _tcpManager().close(instance.url);
+        instance.readyState = WindowSocket.CLOSED;
+    };
 
     return WindowSocket;
 }));
@@ -431,5 +468,6 @@
 function _tcpManager(){
     this.onMessage = function(){};
     this.send=function(url, msg){console.log('SENDING:', url, msg)};
+    this.close=function(url){console.log('CLOSING')};
     return this;
 }
