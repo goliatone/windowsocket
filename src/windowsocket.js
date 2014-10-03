@@ -80,21 +80,20 @@
         binaryType: 'blob',
         bufferedAmount: 0,
         extensions: '',
+        readyState: 0,
+
+        SCHEME:'tcp://',
 
         onerror: function() {},
         onclose: function() {},
         onmessage: function() {},
-        onopen: function() {},
-
-        protocol: '',
-        readyState: 0,
-        url: ''
+        onopen: function() {}
     };
 
     var ERROR_REQUIRED_ARGUMENT = 'Failed to construct \'WindowSocket\': 1 argument required, but only 0 present.';
     var ERROR_URL_SCHEME = 'Failed to construct \'WindowSocket\': The URL\'s scheme must be \'tcp\'.';
     var ERROR_CONNECT_URL = 'WindowSocket connection to \'{{url}}\' failed: Connection closed before receiving a handshake response.'
-
+    var ERROR_INVALID_STATE = 'WindowSocket connection has not been established';
     /**
      * WindowSocket constructor
      *
@@ -116,9 +115,10 @@
      * @param  {object} config Configuration object.
      */
     var WindowSocket = function(url, protocols, config) {
-        if(!url) throw new TypeError(ERROR_REQUIRED_ARGUMENT);
-        if(url.indexOf('tcp://') !== 0) throw new SyntaxError(ERROR_REQUIRED_ARGUMENT);
-        if(!WindowServer.connect(url, this)) throw new Error(ERROR_CONNECT_URL);
+        this.url = url;
+        this.protocols = protocols;
+
+        this._listeners = {};
 
         config = _extend({}, this.constructor.DEFAULTS, config);
 
@@ -153,7 +153,7 @@
     WindowSocket.CLOSED = 3;
 
     ///////////////////////////////////////////////////
-    // PRIVATE METHODS
+    // PUBLIC METHODS
     ///////////////////////////////////////////////////
 
     /**
@@ -186,6 +186,10 @@
         console.log('WindowSocket: Init!');
         _extend(this, config);
 
+        if(!this.url) throw new TypeError(ERROR_REQUIRED_ARGUMENT);
+        if(this.url.indexOf(this.SCHEME) !== 0) throw new SyntaxError(ERROR_REQUIRED_ARGUMENT);
+        if(!WindowServer.connect(this)) throw new Error(ERROR_CONNECT_URL);
+
         return 'This is just a stub!';
     };
 
@@ -199,7 +203,18 @@
      * @return {void}
      */
     WindowSocket.prototype.send = function(data) {
+        //Since we send the connection event on the next frame
+        //we might construct a new WindowSocket instance and
+        //call send right away. If state is CONNECTING we should
+        //probably throw an Error?
+        //TODO: Confirm WebSocket behavior.
+        if(this.readyState === WindowSocket.CONNECTING){
+            return;
+        }
 
+        if (this.readyState !== WindowSocket.OPEN) {
+            throw new Error(ERROR_INVALID_STATE);
+        }
     };
 
     /**
@@ -226,7 +241,65 @@
      * @return {void}
      */
     WindowSocket.prototype.close = function(code, reason) {
+        //TODO: Guard against initial frame delay!
+        //
+        if(this.readyState === WindowSocket.CLOSED || this.readyState === WindowSocket.CLOSING){
+            return;
+        }
 
+        this.readyState = WindowSocket.CLOSING;
+        WindowServer.close(this);
+    };
+
+    ///////////////////////////////////////////////////
+    // EventTarget Interface
+    // @see http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-registration
+    ///////////////////////////////////////////////////
+
+    /**
+     * DOM 2 EventTarget Interface implementation.
+     * @param {String} type
+     * @param {Function} listener
+     * @param {Boolean} useCapture
+     * @return {void}
+     */
+    WindowSocket.prototype.addEventListener = function(type, listener, useCapture){
+        if(!(type in this._listeners)) this._listeners[type] = [];
+        this._listeners[type].push(listener);
+    };
+
+    /**
+     * DOM 2 EventTarget Interface implementation.
+     * @param {String} type
+     * @param {Function} listener
+     * @param {Boolean} useCapture
+     * @return {void}
+     */
+    WindowSocket.prototype.removeEventListener = function(type, listener, useCapture){
+        if(!(type in this._listeners)) return;
+        var events = this._listeners[type];
+        var i = events.length - 1;
+        for (i; i >= 0; --i) {
+            if (events[i] !== listener) continue;
+            events.splice(i, 1);
+            break;
+        }
+    };
+
+    /**
+     * DOM 2 EventTarget Interface implementation.
+     * @param {Event} event
+     * @return {void}
+     */
+    WindowSocket.prototype.dispatchEvent = function(event){
+        var events = this._listeners[event.type] || [];
+        var t = events.length, i = 0;
+        for(; i < t; ++i){
+            events[i](event);
+        }
+        //apply delegated callbacks:
+        var handler = this['on' + event.type];
+        if(typeof handler === 'function') handler.call(this, event);
     };
 
     /**
@@ -236,21 +309,33 @@
      */
     WindowSocket.prototype.logger = _shimConsole(console);
 
-    /**
-     * PubSub emit method stub.
-     */
-    WindowSocket.prototype.emit = function() {
-        this.logger.warn(WindowSocket, 'emit method is not implemented', arguments);
-    };
 
-    function WindowServer(){};
-    WindowServer.connect = function(){
 
-        return false;
+    function WindowServer(){}
+
+    WindowServer.connect = function(instance){
+        WindowServer.connection = window._tcpManager();
+        if(!WindowServer.connection) return false;
+        var url = instance.url;
+
+        //execute next
+        setTimeout(function(){
+            instance.readyState = WindowSocket.OPEN;
+            instance.onopen(new Event('open'));
+        },0);
+
+        return true;
     };
 
     WindowServer.handle = function(){};
     WindowServer.send = function(){};
+    WindowServer.close = function(){};
 
     return WindowSocket;
 }));
+
+function _tcpManager(){
+    this.onMessage = function(){};
+    this.send=function(url, msg){console.log('SENDING:', url, msg)};
+    return this;
+}
