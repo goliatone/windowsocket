@@ -82,9 +82,9 @@
         extensions: '',
         readyState: 0,
 
-        SCHEME:'tcp://',
+        SCHEME: 'tcp://',
 
-        provider: function(){
+        provider: function() {
             return WindowServer.instance();
         },
 
@@ -121,7 +121,7 @@
      */
     var WindowSocket = function(url, protocols, config) {
         this.url = url;
-        this.protocols = protocols;
+        this.protocol = protocols;
 
         this._listeners = {};
 
@@ -195,9 +195,9 @@
         console.log('WindowSocket: Init!');
         _extend(this, config);
 
-        if(!this.url) throw new TypeError(ERROR_REQUIRED_ARGUMENT);
-        if(this.url.indexOf(this.SCHEME) !== 0) throw new SyntaxError(ERROR_REQUIRED_ARGUMENT);
-        if(!this.SERVER.connect(this)) throw new Error(ERROR_CONNECT_URL);
+        if (!this.url) throw new TypeError(ERROR_REQUIRED_ARGUMENT);
+        if (this.url.indexOf(this.SCHEME) !== 0) throw new SyntaxError(ERROR_REQUIRED_ARGUMENT);
+        if (!this.SERVER.connect(this)) throw new Error(ERROR_CONNECT_URL);
 
         return 'This is just a stub!';
     };
@@ -217,7 +217,7 @@
         //call send right away. If state is CONNECTING we should
         //probably throw an Error?
         //TODO: Confirm WebSocket behavior.
-        if(this.readyState === WindowSocket.CONNECTING){
+        if (this.readyState === WindowSocket.CONNECTING) {
             return;
         }
 
@@ -254,7 +254,7 @@
     WindowSocket.prototype.close = function(code, reason) {
         //TODO: Guard against initial frame delay!
         //
-        if(this.readyState === WindowSocket.CLOSED || this.readyState === WindowSocket.CLOSING){
+        if (this.readyState === WindowSocket.CLOSED || this.readyState === WindowSocket.CLOSING) {
             return;
         }
 
@@ -274,8 +274,8 @@
      * @param {Boolean} useCapture
      * @return {void}
      */
-    WindowSocket.prototype.addEventListener = function(type, listener, useCapture){
-        if(!(type in this._listeners)) this._listeners[type] = [];
+    WindowSocket.prototype.addEventListener = function(type, listener, useCapture) {
+        if (!(type in this._listeners)) this._listeners[type] = [];
         this._listeners[type].push(listener);
     };
 
@@ -286,8 +286,8 @@
      * @param {Boolean} useCapture
      * @return {void}
      */
-    WindowSocket.prototype.removeEventListener = function(type, listener, useCapture){
-        if(!(type in this._listeners)) return;
+    WindowSocket.prototype.removeEventListener = function(type, listener, useCapture) {
+        if (!(type in this._listeners)) return;
         var events = this._listeners[type];
         var i = events.length - 1;
         for (i; i >= 0; --i) {
@@ -302,15 +302,16 @@
      * @param {Event} event
      * @return {void}
      */
-    WindowSocket.prototype.dispatchEvent = function(event){
+    WindowSocket.prototype.dispatchEvent = function(event) {
         var events = this._listeners[event.type] || [];
-        var t = events.length, i = 0;
-        for(; i < t; ++i){
+        var t = events.length,
+            i = 0;
+        for (; i < t; ++i) {
             events[i](event);
         }
         //apply delegated callbacks:
         var handler = this['on' + event.type];
-        if(typeof handler === 'function') handler.call(this, event);
+        if (typeof handler === 'function') handler.call(this, event);
     };
 
     ///////////////////////////////////////////////////
@@ -321,15 +322,15 @@
      * @param  {Object} e
      * @return {void}
      */
-    WindowSocket.prototype._triggerEvent = function(e){
-        if(e.readyState) this.readyState = e.readyState;
+    WindowSocket.prototype._triggerEvent = function(e) {
+        if (e.readyState) this.readyState = e.readyState;
 
         //TODO: Clean this up. It's really gross!
         var event,
             events = ['open', 'error', 'close'];
-        if(events.indexOf(e.type) !== -1){
+        if (events.indexOf(e.type) !== -1) {
             event = this._buildEvent(e.type, e);
-        } else if(e.type === 'message') {
+        } else if (e.type === 'message') {
             event = this._buildMessageEvent(e.type, e.message);
         } else {
             //TODO: ErrorMessage factory, replace strings.
@@ -348,14 +349,18 @@
      * @param  {String} type
      * @return {void}
      */
-    WindowSocket.prototype._buildEvent = function(e){
+    WindowSocket.prototype._buildEvent = function(e) {
         //assert(e.type);
-        if(document.createEvent && window.Event){
+        if (document.createEvent && window.Event) {
             var event = document.createEvent('Event');
             event.initEvent(e.type, false, false);
             return event;
         }
-        return {type:e.type, bubbles:false, cancelable:false};
+        return {
+            type: e.type,
+            bubbles: false,
+            cancelable: false
+        };
     };
 
     /**
@@ -367,26 +372,31 @@
      * @param  {String} data
      * @return {void}
      */
-    WindowSocket.prototype._buildMessageEvent = function(e){
+    WindowSocket.prototype._buildMessageEvent = function(e) {
         //TODO: assert(e.message);
         var data = e.message;
 
-        if(window.MessageEvent && typeof MessageEvent === 'function'){
+        if (window.MessageEvent && typeof MessageEvent === 'function') {
             return new MessageEvent('message', {
-                'view':window,
-                'bubbles':false,
-                'cancelable':false,
-                'data':data
+                'view': window,
+                'bubbles': false,
+                'cancelable': false,
+                'data': data
             });
         }
 
-        if(document.createEvent && window.MessageEvent){
+        if (document.createEvent && window.MessageEvent) {
             var event = document.createEvent('MessageEvent');
             event.initWithMessage('message', false, false, data, null, null, window, null);
             return event;
         }
 
-        return {type:'message', data:data, bubbles:false, cancelable:false};
+        return {
+            type: 'message',
+            data: data,
+            bubbles: false,
+            cancelable: false
+        };
     };
 
     /**
@@ -394,7 +404,7 @@
      * @param  {Event} e
      * @return {void}
      */
-    WindowSocket.prototype._buildCloseEvent = function(e){
+    WindowSocket.prototype._buildCloseEvent = function(e) {
         //TODO: assert(e.code, e.reason, e.clean);
         var event = this._buildEvent('close');
         event.code = e.code;
@@ -404,7 +414,7 @@
         return event;
     };
 
-    WindowSocket.prototype._throwError = function(message){
+    WindowSocket.prototype._throwError = function(message) {
         var args = [].splice.call(arguments, 1);
         //TODO: replace message tokens, throw error
     };
@@ -418,46 +428,50 @@
 
 
 
-    function WindowServer(){
+    function WindowServer() {
         this._instances = {};
     }
 
-    WindowServer.instance = function(){
-        if(this._instance) return this._instance;
+    WindowServer.instance = function() {
+        if (this._instance) return this._instance;
         this._instance = new WindowServer();
         this._instance.connection = window._tcpManager();
         return this._instance;
     };
 
-    WindowServer.prototype.init = function(){
-        if(this.initialized) return;
+    WindowServer.prototype.init = function() {
+        if (this.initialized) return;
         this.initialized = true;
     };
 
-    WindowServer.prototype.connect = function(instance){
-        if(!this.connection) return false;
+    WindowServer.prototype.connect = function(instance) {
+        if (!this.connection) return false;
 
         this._instances[instance.ID] = instance;
         var url = instance.url;
 
         //execute next
-        setTimeout(function(){
+        setTimeout(function() {
             instance.readyState = WindowSocket.OPEN;
             instance.onopen(new Event('open'));
-        },0);
+        }, 0);
 
         return true;
     };
 
-    WindowServer.prototype.handle = function(){
-
+    WindowServer.prototype.handle = function(events) {
+        //event => should have type
+        //message
+        events.map(function(event) {
+            this._instances[event.clientId]._triggerEvent(event);
+        }, this);
     };
 
-    WindowServer.prototype.send = function(instance, data){
+    WindowServer.prototype.send = function(instance, data) {
         _tcpManager().send(instance.url, data);
     };
 
-    WindowServer.prototype.close = function(instance){
+    WindowServer.prototype.close = function(instance) {
         _tcpManager().close(instance.url);
         instance.readyState = WindowSocket.CLOSED;
     };
@@ -465,9 +479,13 @@
     return WindowSocket;
 }));
 
-function _tcpManager(){
-    this.onMessage = function(){};
-    this.send=function(url, msg){console.log('SENDING:', url, msg)};
-    this.close=function(url){console.log('CLOSING')};
+function _tcpManager() {
+    this.onMessage = function() {};
+    this.send = function(url, msg) {
+        console.log('SENDING:', url, msg)
+    };
+    this.close = function(url) {
+        console.log('CLOSING')
+    };
     return this;
 }
