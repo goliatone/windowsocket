@@ -464,21 +464,27 @@
     };
 
     WindowServer.prototype.receive = function(events) {
+        !Array.isArray(events) && (events = [events]);
         //event => should have type
         //message
-        events.map(function(event) {
+        events.map(function mapEvent(event) {
             //TODO: What to do?
-            if(!event.clientId) return
-            this._instances[event.clientId]._triggerEvent(event);
+            if(!event.clientId) return console.warn('Event needs clientId!');
+            try{
+                this._instances[event.clientId]._triggerEvent(event);
+            }catch(e){console.log(e);}
+
         }, this);
+
     };
 
     WindowServer.prototype.send = function(instance, data) {
-        this.connection.send(instance.url, data);
+        if(!this._instances[instance.ID]) return console.warn('No instance registered');
+        this.connection.send(instance.url, instance.ID, data);
     };
 
     WindowServer.prototype.close = function(instance) {
-        this.connection.close(instance.url);
+        this.connection.close(instance.url, instance.ID);
         instance.readyState = WindowSocket.CLOSED;
     };
 
@@ -487,16 +493,16 @@
     return WindowSocket;
 }));
 //receive
-function _tcpManager() {
+function _tcpManager(server) {
 
     this.receive = function(e) {
 
     };
 
-    this.send = function(url, msg) {
-        console.log('SENDING:', url, msg)
+    this.send = function(url, id, msg) {
+        console.log('SENDING:', url, id, msg)
     };
-    this.close = function(url) {
+    this.close = function(url, id) {
         console.log('CLOSING')
     };
 
