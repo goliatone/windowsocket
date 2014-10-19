@@ -452,7 +452,7 @@
     WindowServer.instance = function() {
         if (this._instance) return this._instance;
         this._instance = new WindowServer();
-        //This should be called from container
+        //This should be called from transport handler
         // this._instance.init();
         return this._instance;
     };
@@ -460,35 +460,23 @@
     WindowServer.prototype.init = function() {
         if (this.initialized) return;
         this.initialized = true;
-        this._createConnection(WindowServer.DOCUMENT);
+        this._createTransportLayer(WindowServer.DOCUMENT);
         this._flushConnectionQueue();
         this._flushInboxQueue();
     };
 
-    WindowServer.prototype._flushConnectionQueue = function(){
-        if(!this.connectionQueue) return;
-        var queue = this.connectionQueue.concat();
-        this.connectionQueue = null;
-        queue.map(function(connection){
-            clearTimeout(connection.timeoutId);
-            this.connect(connection.instance);
-        }, this);
-    };
-
     WindowServer.prototype.connect = function(instance, error) {
-        //TODO: We should store the instance and then connect all
-        //when ready. Clients should handle timeouts.
         if (!this.initialized){
             var timeoutId = setTimeout(error, WindowServer.CONNECTION_TIMEOUT);
             this.connectionQueue.push({
                 instance:instance,
                 timeoutId:timeoutId
             });
+            instance.readyState = WindowSocket.CONNECTING;
             return false;
         }
 
         this._instances[instance.ID] = instance;
-        var url = instance.url;
 
         //execute next
         setTimeout(function() {
@@ -529,7 +517,17 @@
         instance.readyState = WindowSocket.CLOSED;
     };
 
-    WindowServer.prototype._createConnection = function(doc){
+    WindowServer.prototype._flushConnectionQueue = function(){
+        if(!this.connectionQueue) return;
+        var queue = this.connectionQueue.concat();
+        this.connectionQueue = null;
+        queue.map(function(connection){
+            clearTimeout(connection.timeoutId);
+            this.connect(connection.instance);
+        }, this);
+    };
+
+    WindowServer.prototype._createTransportLayer = function(doc){
         //TODO: This belongs
         this.iframe = doc.createElement('iframe');
         this.iframe.style.display = 'none';
