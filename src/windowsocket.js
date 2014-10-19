@@ -85,6 +85,7 @@
         SCHEME: 'tcp://',
 
         provider: function() {
+            if(!WindowServer) throw new Error('WindowServer not found!');
             return WindowServer.instance();
         },
         generateUID:function(){
@@ -432,24 +433,74 @@
     WindowSocket.prototype.logger = _shimConsole(console);
 
 
+    ////////////////////////////////////////////////////////
+    /// WindowServer
+    /// Bridges external TCP service with WindowSocket
+    /// instances and manages communication.
+    ////////////////////////////////////////////////////////
+    WindowServer.PROTOCOL_SCHEME = 'wtcp';
+    WindowServer.PROTOCOL_END_POINT = 'WindowServerEndPoint';
 
     function WindowServer() {
+        this.inboxQueue = [];
+        this.outboxQueue = [];
         this._instances = {};
     }
 
     WindowServer.instance = function() {
         if (this._instance) return this._instance;
         this._instance = new WindowServer();
-        // this._instance.connected = false;
+        //This should be called from container
+        // this._instance.init();
         return this._instance;
     };
 
     WindowServer.prototype.init = function() {
         if (this.initialized) return;
         this.initialized = true;
+        this._createConnection(window.document);
+        this._flushInboxQueue();
+    };
+
+    WindowServer.prototype._createConnection = function(doc){
+        //TODO: This belongs
+        this.iframe = doc.createElement('iframe');
+        this.iframe.style.display = 'none';
+        doc.documentElement.appendChild(this.iframe);
+    };
+
+    /**
+     * Flush any messages that we got before WindowServer
+     * was ready to run
+     */
+    WindowServer.prototype._flushInboxQueue = function(){
+        var messages = this.inboxQueue.concat();
+        this.inboxQueue = null;
+        messages.map(function(message){
+            this._doRecive(message);
+        }, this);
+    };
+
+    WindowServer.prototype._flushOutboxQueue = function(){
+        if(!this.iframe) return;
+        this.iframe.src = WindowServer.PROTOCOL_SCHEME +'://'+ WindowServer.PROTOCOL_END_POINT;
+    };
+    WindowServer.prototype._fetchOutboxQueue = function(){
+        var messagesQueue = '';
+
+        try{
+            messagesQueue = JSON.stringify(this.outboxQueue);
+        } catch(e){
+
+        }
+        this.outboxQueue = [];
+
+        return messagesQueue;
     };
 
     WindowServer.prototype.connect = function(instance) {
+        //TODO: We should store the instance and then connect all
+        //when ready. Clients should handle timeouts.
         if (!this.connection) return false;
 
         this._instances[instance.ID] = instance;
@@ -464,7 +515,26 @@
         return true;
     };
 
+    /**
+     * Emit events to registered client.
+     * The format of the event must follow
+     * the template:
+     * ```javascript
+     * {
+     *     clientId:<client id>,
+     *     type:'message',
+     *     message:<JSON string>
+     * }
+     * ```
+     * @param  {Object|Array} events
+     * @return {void}
+     */
     WindowServer.prototype.receive = function(events) {
+        if(this.inboxQueue) this.inboxQueue.push(events)
+        else this._doRecive(events);
+    };
+
+    WindowServer.prototype._doRecive = function(events){
         !Array.isArray(events) && (events = [events]);
         //event => should have type
         //message
@@ -474,15 +544,20 @@
             try{
                 this._instances[event.clientId]._triggerEvent(event);
             }catch(e){console.log(e);}
-
         }, this);
-
     };
 
     WindowServer.prototype.send = function(instance, data) {
         if(!this._instances[instance.ID]) return console.warn('No instance registered');
-        this.connection.send(instance.url, instance.ID, data);
+        // this.connection.send(instance.url, instance.ID, data);
+        this._doSend(instance, data);
     };
+
+    WindowServer.prototype._doSend = function(instance, data){
+        var message = {clientId:instance.ID, mesasge:data, endpoint:instance.url};
+        this.outboxQueue.push(message);
+        this._flushOutboxQueue();
+    }
 
     WindowServer.prototype.close = function(instance) {
         this.connection.close(instance.url, instance.ID);
