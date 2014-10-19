@@ -202,9 +202,8 @@
 
         if (!this.url) throw new TypeError(ERROR_REQUIRED_ARGUMENT);
         if (this.url.indexOf(this.SCHEME) !== 0) throw new SyntaxError(ERROR_REQUIRED_ARGUMENT);
-        if (!this.SERVER.connect(this)) throw new Error(ERROR_CONNECT_URL);
 
-        return 'This is just a stub!';
+        this.SERVER.connect(this, function(){ throw new Error(ERROR_CONNECT_URL)});
     };
 
     /**
@@ -438,13 +437,16 @@
     /// Bridges external TCP service with WindowSocket
     /// instances and manages communication.
     ////////////////////////////////////////////////////////
+    WindowServer.CONNECTION_TIMEOUT = 20000;
     WindowServer.PROTOCOL_SCHEME = 'wtcp';
     WindowServer.PROTOCOL_END_POINT = 'WindowServerEndPoint';
+    WindowServer.DOCUMENT = window.document;
 
     function WindowServer() {
+        this._instances = {};
+        this.connectionQueue = [];
         this.inboxQueue = [];
         this.outboxQueue = [];
-        this._instances = {};
     }
 
     WindowServer.instance = function() {
@@ -458,8 +460,73 @@
     WindowServer.prototype.init = function() {
         if (this.initialized) return;
         this.initialized = true;
-        this._createConnection(window.document);
+        this._createConnection(WindowServer.DOCUMENT);
+        this._flushConnectionQueue();
         this._flushInboxQueue();
+    };
+
+    WindowServer.prototype._flushConnectionQueue = function(){
+        if(!this.connectionQueue) return;
+        var queue = this.connectionQueue.concat();
+        this.connectionQueue = null;
+        queue.map(function(connection){
+            clearTimeout(connection.timeoutId);
+            this.connect(connection.instance);
+        }, this);
+    };
+
+    WindowServer.prototype.connect = function(instance, error) {
+        //TODO: We should store the instance and then connect all
+        //when ready. Clients should handle timeouts.
+        if (!this.initialized){
+            var timeoutId = setTimeout(error, WindowServer.CONNECTION_TIMEOUT);
+            this.connectionQueue.push({
+                instance:instance,
+                timeoutId:timeoutId
+            });
+            return false;
+        }
+
+        this._instances[instance.ID] = instance;
+        var url = instance.url;
+
+        //execute next
+        setTimeout(function() {
+            instance.readyState = WindowSocket.OPEN;
+            instance.onopen(new Event('open'));
+        }, 0);
+
+        return true;
+    };
+
+    WindowServer.prototype.send = function(instance, data) {
+        if(!this._instances[instance.ID]) return console.warn('No instance registered');
+        // this.connection.send(instance.url, instance.ID, data);
+        this._doSend(instance, data);
+    };
+
+    /**
+     * Emit events to registered client.
+     * The format of the event must follow
+     * the template:
+     * ```javascript
+     * {
+     *     clientId:<client id>,
+     *     type:'message',
+     *     message:<JSON string>
+     * }
+     * ```
+     * @param  {Object|Array} events
+     * @return {void}
+     */
+    WindowServer.prototype.receive = function(events) {
+        if(this.inboxQueue) this.inboxQueue.push(events)
+        else setTimeout(this._doRecive(events), 0);
+    };
+
+    WindowServer.prototype.close = function(instance) {
+        this.connection.close(instance.url, instance.ID);
+        instance.readyState = WindowSocket.CLOSED;
     };
 
     WindowServer.prototype._createConnection = function(doc){
@@ -485,6 +552,7 @@
         if(!this.iframe) return;
         this.iframe.src = WindowServer.PROTOCOL_SCHEME +'://'+ WindowServer.PROTOCOL_END_POINT;
     };
+
     WindowServer.prototype._fetchOutboxQueue = function(){
         var messagesQueue = '';
 
@@ -496,42 +564,6 @@
         this.outboxQueue = [];
 
         return messagesQueue;
-    };
-
-    WindowServer.prototype.connect = function(instance) {
-        //TODO: We should store the instance and then connect all
-        //when ready. Clients should handle timeouts.
-        if (!this.connection) return false;
-
-        this._instances[instance.ID] = instance;
-        var url = instance.url;
-
-        //execute next
-        setTimeout(function() {
-            instance.readyState = WindowSocket.OPEN;
-            instance.onopen(new Event('open'));
-        }, 0);
-
-        return true;
-    };
-
-    /**
-     * Emit events to registered client.
-     * The format of the event must follow
-     * the template:
-     * ```javascript
-     * {
-     *     clientId:<client id>,
-     *     type:'message',
-     *     message:<JSON string>
-     * }
-     * ```
-     * @param  {Object|Array} events
-     * @return {void}
-     */
-    WindowServer.prototype.receive = function(events) {
-        if(this.inboxQueue) this.inboxQueue.push(events)
-        else this._doRecive(events);
     };
 
     WindowServer.prototype._doRecive = function(events){
@@ -547,25 +579,18 @@
         }, this);
     };
 
-    WindowServer.prototype.send = function(instance, data) {
-        if(!this._instances[instance.ID]) return console.warn('No instance registered');
-        // this.connection.send(instance.url, instance.ID, data);
-        this._doSend(instance, data);
-    };
-
     WindowServer.prototype._doSend = function(instance, data){
         var message = {clientId:instance.ID, mesasge:data, endpoint:instance.url};
         this.outboxQueue.push(message);
         this._flushOutboxQueue();
-    }
-
-    WindowServer.prototype.close = function(instance) {
-        this.connection.close(instance.url, instance.ID);
-        instance.readyState = WindowSocket.CLOSED;
     };
 
     window.server = WindowServer.instance();
     window.server.connection = _tcpManager();
+
+
+
+
     return WindowSocket;
 }));
 //receive
