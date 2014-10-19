@@ -216,16 +216,13 @@
      * @return {void}
      */
     WindowSocket.prototype.send = function(data) {
-        //Since we send the connection event on the next frame
-        //we might construct a new WindowSocket instance and
-        //call send right away. If state is CONNECTING we should
-        //probably throw an Error?
-        //TODO: Confirm WebSocket behavior.
+        //TODO: Is this the WebScoket behavior?!
         if (this.readyState === WindowSocket.CONNECTING) {
+            //We are throwing away the data, not connected
             return;
         }
 
-        if (this.readyState !== WindowSocket.OPEN) {
+        if (this.readyState > WindowSocket.OPEN) {
             throw new Error(ERROR_INVALID_STATE);
         }
 
@@ -379,7 +376,7 @@
     WindowSocket.prototype._buildMessageEvent = function(e) {
         //TODO: assert(e.message);
         var data = e.message;
-        console.debug('BUILD MESSAGE EVENT', e, data)
+        // console.debug('BUILD MESSAGE EVENT', e, data)
         //Safari's MessageEvent constructor is an Object! Just like WebSocket
         if (window.MessageEvent /*&& typeof MessageEvent === 'function'*/) {
             return new MessageEvent('message', {
@@ -490,6 +487,7 @@
     WindowServer.prototype.send = function(instance, data) {
         if(!this._instances[instance.ID]) return console.warn('No instance registered');
         // this.connection.send(instance.url, instance.ID, data);
+        console.log('SEND', data)
         this._doSend(instance, data);
     };
 
@@ -509,10 +507,14 @@
      */
     WindowServer.prototype.receive = function(events) {
         if(this.inboxQueue) this.inboxQueue.push(events)
-        else setTimeout(this._doRecive(events), 0);
+        else this._doReceive(events);
     };
 
     WindowServer.prototype.close = function(instance) {
+        //It may be helpful to examine the instance's
+        //bufferedAmount attribute before attempting
+        //to close the connection to determine if any
+        //data has yet to be transmitted on the network.
         this.connection.close(instance.url, instance.ID);
         instance.readyState = WindowSocket.CLOSED;
     };
@@ -542,7 +544,7 @@
         var messages = this.inboxQueue.concat();
         this.inboxQueue = null;
         messages.map(function(message){
-            this._doRecive(message);
+            this._doReceive(message);
         }, this);
     };
 
@@ -564,46 +566,31 @@
         return messagesQueue;
     };
 
-    WindowServer.prototype._doRecive = function(events){
+    WindowServer.prototype._doReceive = function(events){
         !Array.isArray(events) && (events = [events]);
         //event => should have type
         //message
-        events.map(function mapEvent(event) {
-            //TODO: What to do?
-            if(!event.clientId) return console.warn('Event needs clientId!');
-            try{
-                this._instances[event.clientId]._triggerEvent(event);
-            }catch(e){console.log(e);}
-        }, this);
+        var triggerEvents = function(){
+            events.map(function mapEvent(event) {
+                //TODO: What to do?
+                if(!event.clientId) return console.warn('Event needs clientId!');
+                try{
+                    this._instances[event.clientId]._triggerEvent(event);
+                }catch(e){console.log(e);}
+            }, this);
+        };
+        setTimeout(triggerEvents.bind(this), 0);
     };
 
     WindowServer.prototype._doSend = function(instance, data){
         var message = {clientId:instance.ID, mesasge:data, endpoint:instance.url};
         this.outboxQueue.push(message);
+        console.log('outboxQueue', this.outboxQueue);
         this._flushOutboxQueue();
     };
 
     window.server = WindowServer.instance();
-    window.server.connection = _tcpManager();
-
-
 
 
     return WindowSocket;
 }));
-//receive
-function _tcpManager(server) {
-
-    this.receive = function(e) {
-
-    };
-
-    this.send = function(url, id, msg) {
-        console.log('SENDING:', url, id, msg)
-    };
-    this.close = function(url, id) {
-        console.log('CLOSING')
-    };
-
-    return this;
-}
