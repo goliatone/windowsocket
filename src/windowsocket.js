@@ -35,7 +35,7 @@
             return mod;
         };
     }
-}(this, 'windowsocket', ['extend'], function(extend) {
+}(this, 'WindowSocket', ['extend'], function(extend) {
 
     /**
      * Extend method.
@@ -380,7 +380,8 @@
         //TODO: assert(e.message);
         var data = e.message;
         console.debug('BUILD MESSAGE EVENT', e, data)
-        if (window.MessageEvent && typeof MessageEvent === 'function') {
+        //Safari's MessageEvent constructor is an Object! Just like WebSocket
+        if (window.MessageEvent /*&& typeof MessageEvent === 'function'*/) {
             return new MessageEvent('message', {
                 'view': window,
                 'bubbles': false,
