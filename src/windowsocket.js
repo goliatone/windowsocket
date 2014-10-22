@@ -515,7 +515,7 @@
         //bufferedAmount attribute before attempting
         //to close the connection to determine if any
         //data has yet to be transmitted on the network.
-        this.connection.close(instance.url, instance.ID);
+        // this.connection.close(instance.url, instance.ID);
         instance.readyState = WindowSocket.CLOSED;
     };
 
