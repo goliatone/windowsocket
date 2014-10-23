@@ -1,0 +1,463 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		266286D119F8AF7F00D8E07C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 266286D019F8AF7F00D8E07C /* main.m */; };
+		266286D419F8AF7F00D8E07C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 266286D319F8AF7F00D8E07C /* AppDelegate.m */; };
+		266286D619F8AF7F00D8E07C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 266286D519F8AF7F00D8E07C /* Images.xcassets */; };
+		266286D919F8AF7F00D8E07C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 266286D719F8AF7F00D8E07C /* MainMenu.xib */; };
+		266286E519F8AF7F00D8E07C /* WindowSocketServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 266286E419F8AF7F00D8E07C /* WindowSocketServiceTests.m */; };
+		266286EF19F8B02300D8E07C /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 266286EE19F8B02300D8E07C /* WebKit.framework */; };
+		266286F219F8B24500D8E07C /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 266286F119F8B24500D8E07C /* index.html */; };
+		266286F419F8B25100D8E07C /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 266286F319F8B25100D8E07C /* main.js */; };
+		266286FB19F8B28600D8E07C /* gextend in Resources */ = {isa = PBXBuildFile; fileRef = 266286F519F8B28600D8E07C /* gextend */; };
+		266286FC19F8B28600D8E07C /* gkeypath in Resources */ = {isa = PBXBuildFile; fileRef = 266286F619F8B28600D8E07C /* gkeypath */; };
+		266286FD19F8B28600D8E07C /* jquery in Resources */ = {isa = PBXBuildFile; fileRef = 266286F719F8B28600D8E07C /* jquery */; };
+		266286FE19F8B28600D8E07C /* requirejs in Resources */ = {isa = PBXBuildFile; fileRef = 266286F819F8B28600D8E07C /* requirejs */; };
+		266286FF19F8B28600D8E07C /* requirejs-domready in Resources */ = {isa = PBXBuildFile; fileRef = 266286F919F8B28600D8E07C /* requirejs-domready */; };
+		2662870019F8B28600D8E07C /* requirejs-text in Resources */ = {isa = PBXBuildFile; fileRef = 266286FA19F8B28600D8E07C /* requirejs-text */; };
+		2662870219F8B29800D8E07C /* windowsocket.js in Resources */ = {isa = PBXBuildFile; fileRef = 2662870119F8B29800D8E07C /* windowsocket.js */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		266286DF19F8AF7F00D8E07C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 266286C319F8AF7F00D8E07C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 266286CA19F8AF7F00D8E07C;
+			remoteInfo = WindowSocketService;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		266286CB19F8AF7F00D8E07C /* WindowSocketService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WindowSocketService.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		266286CF19F8AF7F00D8E07C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		266286D019F8AF7F00D8E07C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		266286D219F8AF7F00D8E07C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		266286D319F8AF7F00D8E07C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		266286D519F8AF7F00D8E07C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		266286D819F8AF7F00D8E07C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		266286DE19F8AF7F00D8E07C /* WindowSocketServiceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WindowSocketServiceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		266286E319F8AF7F00D8E07C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		266286E419F8AF7F00D8E07C /* WindowSocketServiceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WindowSocketServiceTests.m; sourceTree = "<group>"; };
+		266286EE19F8B02300D8E07C /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		266286F119F8B24500D8E07C /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		266286F319F8B25100D8E07C /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
+		266286F519F8B28600D8E07C /* gextend */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gextend; sourceTree = "<group>"; };
+		266286F619F8B28600D8E07C /* gkeypath */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gkeypath; sourceTree = "<group>"; };
+		266286F719F8B28600D8E07C /* jquery */ = {isa = PBXFileReference; lastKnownFileType = folder; path = jquery; sourceTree = "<group>"; };
+		266286F819F8B28600D8E07C /* requirejs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = requirejs; sourceTree = "<group>"; };
+		266286F919F8B28600D8E07C /* requirejs-domready */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "requirejs-domready"; sourceTree = "<group>"; };
+		266286FA19F8B28600D8E07C /* requirejs-text */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "requirejs-text"; sourceTree = "<group>"; };
+		2662870119F8B29800D8E07C /* windowsocket.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = windowsocket.js; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		266286C819F8AF7F00D8E07C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				266286EF19F8B02300D8E07C /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		266286DB19F8AF7F00D8E07C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		266286C219F8AF7F00D8E07C = {
+			isa = PBXGroup;
+			children = (
+				266286EE19F8B02300D8E07C /* WebKit.framework */,
+				266286CD19F8AF7F00D8E07C /* WindowSocketService */,
+				266286E119F8AF7F00D8E07C /* WindowSocketServiceTests */,
+				266286CC19F8AF7F00D8E07C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		266286CC19F8AF7F00D8E07C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				266286CB19F8AF7F00D8E07C /* WindowSocketService.app */,
+				266286DE19F8AF7F00D8E07C /* WindowSocketServiceTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		266286CD19F8AF7F00D8E07C /* WindowSocketService */ = {
+			isa = PBXGroup;
+			children = (
+				266286D219F8AF7F00D8E07C /* AppDelegate.h */,
+				266286D319F8AF7F00D8E07C /* AppDelegate.m */,
+				266286D519F8AF7F00D8E07C /* Images.xcassets */,
+				266286D719F8AF7F00D8E07C /* MainMenu.xib */,
+				266286CE19F8AF7F00D8E07C /* Supporting Files */,
+			);
+			path = WindowSocketService;
+			sourceTree = "<group>";
+		};
+		266286CE19F8AF7F00D8E07C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				266286F019F8B21000D8E07C /* www */,
+				266286CF19F8AF7F00D8E07C /* Info.plist */,
+				266286D019F8AF7F00D8E07C /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		266286E119F8AF7F00D8E07C /* WindowSocketServiceTests */ = {
+			isa = PBXGroup;
+			children = (
+				266286E419F8AF7F00D8E07C /* WindowSocketServiceTests.m */,
+				266286E219F8AF7F00D8E07C /* Supporting Files */,
+			);
+			path = WindowSocketServiceTests;
+			sourceTree = "<group>";
+		};
+		266286E219F8AF7F00D8E07C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				266286E319F8AF7F00D8E07C /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		266286F019F8B21000D8E07C /* www */ = {
+			isa = PBXGroup;
+			children = (
+				2662870119F8B29800D8E07C /* windowsocket.js */,
+				266286F519F8B28600D8E07C /* gextend */,
+				266286F619F8B28600D8E07C /* gkeypath */,
+				266286F719F8B28600D8E07C /* jquery */,
+				266286F819F8B28600D8E07C /* requirejs */,
+				266286F919F8B28600D8E07C /* requirejs-domready */,
+				266286FA19F8B28600D8E07C /* requirejs-text */,
+				266286F319F8B25100D8E07C /* main.js */,
+				266286F119F8B24500D8E07C /* index.html */,
+			);
+			name = www;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		266286CA19F8AF7F00D8E07C /* WindowSocketService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 266286E819F8AF7F00D8E07C /* Build configuration list for PBXNativeTarget "WindowSocketService" */;
+			buildPhases = (
+				266286C719F8AF7F00D8E07C /* Sources */,
+				266286C819F8AF7F00D8E07C /* Frameworks */,
+				266286C919F8AF7F00D8E07C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WindowSocketService;
+			productName = WindowSocketService;
+			productReference = 266286CB19F8AF7F00D8E07C /* WindowSocketService.app */;
+			productType = "com.apple.product-type.application";
+		};
+		266286DD19F8AF7F00D8E07C /* WindowSocketServiceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 266286EB19F8AF7F00D8E07C /* Build configuration list for PBXNativeTarget "WindowSocketServiceTests" */;
+			buildPhases = (
+				266286DA19F8AF7F00D8E07C /* Sources */,
+				266286DB19F8AF7F00D8E07C /* Frameworks */,
+				266286DC19F8AF7F00D8E07C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				266286E019F8AF7F00D8E07C /* PBXTargetDependency */,
+			);
+			name = WindowSocketServiceTests;
+			productName = WindowSocketServiceTests;
+			productReference = 266286DE19F8AF7F00D8E07C /* WindowSocketServiceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		266286C319F8AF7F00D8E07C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = Goliatone;
+				TargetAttributes = {
+					266286CA19F8AF7F00D8E07C = {
+						CreatedOnToolsVersion = 6.0.1;
+					};
+					266286DD19F8AF7F00D8E07C = {
+						CreatedOnToolsVersion = 6.0.1;
+						TestTargetID = 266286CA19F8AF7F00D8E07C;
+					};
+				};
+			};
+			buildConfigurationList = 266286C619F8AF7F00D8E07C /* Build configuration list for PBXProject "WindowSocketService" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 266286C219F8AF7F00D8E07C;
+			productRefGroup = 266286CC19F8AF7F00D8E07C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				266286CA19F8AF7F00D8E07C /* WindowSocketService */,
+				266286DD19F8AF7F00D8E07C /* WindowSocketServiceTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		266286C919F8AF7F00D8E07C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				266286F219F8B24500D8E07C /* index.html in Resources */,
+				266286FF19F8B28600D8E07C /* requirejs-domready in Resources */,
+				266286FD19F8B28600D8E07C /* jquery in Resources */,
+				266286FC19F8B28600D8E07C /* gkeypath in Resources */,
+				2662870219F8B29800D8E07C /* windowsocket.js in Resources */,
+				2662870019F8B28600D8E07C /* requirejs-text in Resources */,
+				266286FE19F8B28600D8E07C /* requirejs in Resources */,
+				266286D619F8AF7F00D8E07C /* Images.xcassets in Resources */,
+				266286D919F8AF7F00D8E07C /* MainMenu.xib in Resources */,
+				266286F419F8B25100D8E07C /* main.js in Resources */,
+				266286FB19F8B28600D8E07C /* gextend in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		266286DC19F8AF7F00D8E07C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		266286C719F8AF7F00D8E07C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				266286D419F8AF7F00D8E07C /* AppDelegate.m in Sources */,
+				266286D119F8AF7F00D8E07C /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		266286DA19F8AF7F00D8E07C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				266286E519F8AF7F00D8E07C /* WindowSocketServiceTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		266286E019F8AF7F00D8E07C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 266286CA19F8AF7F00D8E07C /* WindowSocketService */;
+			targetProxy = 266286DF19F8AF7F00D8E07C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		266286D719F8AF7F00D8E07C /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				266286D819F8AF7F00D8E07C /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		266286E619F8AF7F00D8E07C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		266286E719F8AF7F00D8E07C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		266286E919F8AF7F00D8E07C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = WindowSocketService/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		266286EA19F8AF7F00D8E07C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = WindowSocketService/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		266286EC19F8AF7F00D8E07C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WindowSocketServiceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WindowSocketService.app/Contents/MacOS/WindowSocketService";
+			};
+			name = Debug;
+		};
+		266286ED19F8AF7F00D8E07C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WindowSocketServiceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WindowSocketService.app/Contents/MacOS/WindowSocketService";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		266286C619F8AF7F00D8E07C /* Build configuration list for PBXProject "WindowSocketService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				266286E619F8AF7F00D8E07C /* Debug */,
+				266286E719F8AF7F00D8E07C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		266286E819F8AF7F00D8E07C /* Build configuration list for PBXNativeTarget "WindowSocketService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				266286E919F8AF7F00D8E07C /* Debug */,
+				266286EA19F8AF7F00D8E07C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		266286EB19F8AF7F00D8E07C /* Build configuration list for PBXNativeTarget "WindowSocketServiceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				266286EC19F8AF7F00D8E07C /* Debug */,
+				266286ED19F8AF7F00D8E07C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 266286C319F8AF7F00D8E07C /* Project object */;
+}
