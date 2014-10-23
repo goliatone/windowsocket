@@ -22,6 +22,7 @@
 		266286FF19F8B28600D8E07C /* requirejs-domready in Resources */ = {isa = PBXBuildFile; fileRef = 266286F919F8B28600D8E07C /* requirejs-domready */; };
 		2662870019F8B28600D8E07C /* requirejs-text in Resources */ = {isa = PBXBuildFile; fileRef = 266286FA19F8B28600D8E07C /* requirejs-text */; };
 		2662870219F8B29800D8E07C /* windowsocket.js in Resources */ = {isa = PBXBuildFile; fileRef = 2662870119F8B29800D8E07C /* windowsocket.js */; };
+		2662870419F8B80900D8E07C /* WindowSocketTCP.js.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2662870319F8B80900D8E07C /* WindowSocketTCP.js.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		266286F919F8B28600D8E07C /* requirejs-domready */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "requirejs-domready"; sourceTree = "<group>"; };
 		266286FA19F8B28600D8E07C /* requirejs-text */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "requirejs-text"; sourceTree = "<group>"; };
 		2662870119F8B29800D8E07C /* windowsocket.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = windowsocket.js; sourceTree = "<group>"; };
+		2662870319F8B80900D8E07C /* WindowSocketTCP.js.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = WindowSocketTCP.js.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +139,7 @@
 		266286F019F8B21000D8E07C /* www */ = {
 			isa = PBXGroup;
 			children = (
+				2662870319F8B80900D8E07C /* WindowSocketTCP.js.txt */,
 				2662870119F8B29800D8E07C /* windowsocket.js */,
 				266286F519F8B28600D8E07C /* gextend */,
 				266286F619F8B28600D8E07C /* gkeypath */,
@@ -233,6 +236,7 @@
 				266286F219F8B24500D8E07C /* index.html in Resources */,
 				266286FF19F8B28600D8E07C /* requirejs-domready in Resources */,
 				266286FD19F8B28600D8E07C /* jquery in Resources */,
+				2662870419F8B80900D8E07C /* WindowSocketTCP.js.txt in Resources */,
 				266286FC19F8B28600D8E07C /* gkeypath in Resources */,
 				2662870219F8B29800D8E07C /* windowsocket.js in Resources */,
 				2662870019F8B28600D8E07C /* requirejs-text in Resources */,

@@ -28,12 +28,52 @@
     [[[self webView] mainFrame] loadRequest:request];
     
     [self.window setContentView:self.webView];
-    
     [self.window setTitle:@"goliatone"];
+    
+    [self initializeBridgeWithWebView:self.webView];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // Insert code here to tear down your application
+}
+
+-(void) initializeBridgeWithWebView:(WebView *)vewView
+{
+    vewView.frameLoadDelegate = self;
+    vewView.resourceLoadDelegate = self;
+    vewView.policyDelegate = self;
+}
+
+-(void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
+{
+    if(![[sender stringByEvaluatingJavaScriptFromString:@"typeof WindowSocketTCP == 'object'"] isEqualToString:@"true"]){
+        NSBundle *bundle = [NSBundle mainBundle];
+        NSString *filePath = [bundle pathForResource:@"WindowSocketTCP.js" ofType:@"txt"];
+        NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        [sender stringByEvaluatingJavaScriptFromString:js];
+    }
+}
+
+-(void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame
+{
+    
+}
+
+-(void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener
+{
+    
+}
+
+-(void)webView:(WebView *)sender didCommitLoadForFrame:(WebFrame *)frame
+{
+    
+}
+
+-(NSURLRequest *)webView:(WebView *)sender resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource
+{
+    if(sender != _webView) {return request;}
+    
+    return request;
 }
 
 @end

@@ -13,5 +13,7 @@
 @property (weak) IBOutlet NSWindow *window;
 @property (assign) IBOutlet WebView *webView;
 
+-(void)initializeBridgeWithWebView:(WebView *) vewView;
+
 @end
 
