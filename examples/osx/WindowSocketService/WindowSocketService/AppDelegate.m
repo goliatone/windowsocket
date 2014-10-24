@@ -37,6 +37,7 @@
     // Insert code here to tear down your application
 }
 
+#pragma mark - WindowSocketServiceManager
 -(void) initializeBridgeWithWebView:(WebView *)vewView
 {
     vewView.frameLoadDelegate = self;
